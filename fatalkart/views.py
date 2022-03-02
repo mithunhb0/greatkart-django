@@ -7,6 +7,7 @@ def home(request):
     
     context = {
         'products': products,
-        # 'reviews': reviews,
+ 
     }
     return render(request, "kart/home.html", context)
+       # 'reviews': reviews,

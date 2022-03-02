@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'category',
     'accounts',
     'store',
+    'carts',
 ]
 
 MIDDLEWARE = [
@@ -69,7 +70,7 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
                 # context_processors
                 'category.context_processors.menu_links',
-                # 'carts.context_processors.counter',
+                'carts.context_processors.counter', 
             ],
         },
     },
