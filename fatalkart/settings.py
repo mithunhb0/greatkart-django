@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 
 from pathlib import Path
 import os
+from decouple import config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -22,10 +23,10 @@ STATIC_DIR = os.path.join(BASE_DIR,"static")
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-c7w&pr8$dxt9&rvap4f8&ns$kx0_4^pb)qf)19o6gy#+8($yb)'
+SECRET_KEY = config('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = config('DEBUG', default=False, cast=bool)
 
 ALLOWED_HOSTS = []
 
@@ -44,6 +45,7 @@ INSTALLED_APPS = [
     'store',
     'carts',
     'orders',
+    'admin_honeypot',
 ]
 
 MIDDLEWARE = [
@@ -54,7 +56,13 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    # timeout
+    'django_session_timeout.middleware.SessionTimeoutMiddleware',
 ]
+
+SESSION_EXPIRE_SECONDS = 3600  # 1 hour
+SESSION_EXPIRE_AFTER_LAST_ACTIVITY = True
+SESSION_TIMEOUT_REDIRECT = 'accounts/login/'
 
 ROOT_URLCONF = 'fatalkart.urls'
 
@@ -148,22 +156,15 @@ MESSAGE_TAGS = {
     messages.ERROR: 'danger',
 }
 
-# # SMTP configuration
-# EMAIL_HOST = config('EMAIL_HOST')
-# EMAIL_PORT = config('EMAIL_PORT', cast=int)
-# EMAIL_HOST_USER = config('EMAIL_HOST_USER')
-# EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
-# EMAIL_USE_TLS = config('EMAIL_USE_TLS', cast=bool)
-
-
 # SMTP configuration
 #Cnfiguration for sending an Email
 # SMTP mail configuration
 # SMTP--> Simple mail Transfer Protocol
 # TLS --> Transport Layer Security
 
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 587
-EMAIL_HOST_USER = 'django202107@gmail.com'
-EMAIL_HOST_PASSWORD =''
-EMAIL_USE_TLS = True
+# SMTP configuration
+EMAIL_HOST = config('EMAIL_HOST')
+EMAIL_PORT = config('EMAIL_PORT', cast=int)
+EMAIL_HOST_USER = config('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
+EMAIL_USE_TLS = config('EMAIL_USE_TLS', cast=bool)
